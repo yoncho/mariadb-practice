@@ -14,6 +14,8 @@ select first_name as '이름', gender as '성별', hire_date as '입사일' from
 -- 여직원과 남직원은 각 각 몇 명이나 있나요?
 select count(*) from employees where gender='M';
 select count(*) from employees where gender='F';
+select count(*) from employees group by gender='M', gender='F';
+
 -- 문제4.
 -- 현재 근무하고 있는 직원 수는 몇 명입니까? (-- salaries 테이블을 사용합니다.) 
 select count(*) from salaries where to_date='9999-01-01';
