@@ -3,7 +3,7 @@
 -- 문제1.
 -- 사번이 10944인 사원의 이름은(이름만)
 
-select first_name from employees where emp_no='10944';
+select first_name as '이름' from employees where emp_no='10944';
 
 -- 문제2. 
 -- 전체직원의 다음 정보를 조회하세요. 가장 -- 선임부터 출력이 되도록 하세요. 
@@ -36,7 +36,7 @@ select count(*) from salaries where to_date='9999-01-01' and salary >= '120000';
 select distinct title from titles order by length(title) desc;
 -- 문제10
 -- 현재 Enginner 직책의 사원은 총 몇 명입니까?
- select count(*) from titles where title like '%engineer' and to_date='9999-01-01';
+ select count(*) from titles where title = 'Engineer' and to_date='9999-01-01';
 -- 문제11
 -- 사번이 13250(Zeydy)인 직원이 직책 변경 상황을 시간순으로 출력해보세요.
 select * from titles where emp_no='13250' order by from_date;
