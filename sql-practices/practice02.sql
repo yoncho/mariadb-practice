@@ -34,7 +34,29 @@ where a.emp_no = b.emp_no and b.to_date='9999-01-01';
 
 -- [+] 자체 문제 7. 
 -- 부서별 최고 연장자와 최고 연봉자를 표시하시오.
-select d.dept_name as '부서', max(s.salary) as '최고 연봉', period_diff(date_format(max(e.birth_date), '%y'), date_format(curdate(), '%y')) as '최고 연장자'
-from employees e, dept_manager dm, departments d, salaries s
-where e.emp_no = dm.emp_no and dm.dept_no = d.dept_no and s.emp_no = e.emp_no
-group by d.dept_name;
+-- 1) 부서별 최고 연봉 
+select dept_info.dept_no as '부서코드', e.emp_no as '사원번호', max(s.salary) as '최고 연봉'
+from employees e
+join salaries s on e.emp_no=s.emp_no
+join (select de.emp_no, d.dept_no as dept_no
+from dept_emp de, departments d
+where de.dept_no=d.dept_no
+group by de.emp_no
+) as dept_info on (dept_info.emp_no=e.emp_no)
+group by dept_info.dept_no;
+
+-- emp_no, departments
+select de.emp_no, d.dept_no
+from dept_emp de, departments d
+where de.dept_no=d.dept_no
+group by de.emp_no;
+
+-- emp_no, max(salary)
+select e.emp_no, max(salary) as max_salary
+from employees e, salaries s
+where e.emp_no=s.emp_no
+group by e.emp_no;
+
+
+
+
