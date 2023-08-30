@@ -31,3 +31,10 @@ where a.emp_no = b.emp_no and b.to_date='9999-01-01';
 select period_diff(date_format(min(a.birth_date), '%y'), date_format(curdate(), '%y'))  as '최고 어린 사원', period_diff(date_format(max(a.birth_date), '%y'), date_format(curdate(), '%y')) as '최 연장자'
 from employees a, titles b
 where a.emp_no = b.emp_no and b.to_date='9999-01-01';
+
+-- [+] 자체 문제 7. 
+-- 부서별 최고 연장자와 최고 연봉자를 표시하시오.
+select d.dept_name as '부서', max(s.salary) as '최고 연봉', period_diff(date_format(max(e.birth_date), '%y'), date_format(curdate(), '%y')) as '최고 연장자'
+from employees e, dept_manager dm, departments d, salaries s
+where e.emp_no = dm.emp_no and dm.dept_no = d.dept_no and s.emp_no = e.emp_no
+group by d.dept_name;
