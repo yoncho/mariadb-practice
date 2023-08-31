@@ -1,4 +1,5 @@
--- subquery 위주의 혼합 문제
+-- subquery 위주의 혼합 문제입니다.
+
 -- 문제1.
 -- 현재 평균 연봉보다 많은 월급을 받는 직원은 몇 명이나 있습니까
 select count(*) as '평균 이상 연봉자'
@@ -31,20 +32,29 @@ and s.salary=max_dept.s_max_salary;
 -- 문제3. where x... 크다 조건... from절에 join 하는 방식...!!
 -- 현재, 자신의 부서 평균 급여보다 연봉(salary)이 많은 사원의 사번, 이름과 연봉을 조회하세요 
 
-select e.emp_no, concat(e.first_name,' ',e.last_name) as '이름', s.salary, d.avg_salary
-from employees e, dept_emp de, salaries s, (select de.dept_no as dept_num, avg(s.salary) as avg_salary
-											from dept_emp de, salaries s
-											where de.emp_no=s.emp_no
-											and de.to_date='9999-01-01'
-											and s.to_date='9999-01-01'
-											group by de.dept_no) as d
+select 
+	e.emp_no, 
+    concat(e.first_name,' ',e.last_name) as '이름', 
+    s.salary, 
+    d.avg_salary
+from 
+	employees e, 
+    dept_emp de, 
+    salaries s, 
+    (select 
+		de.dept_no as dept_num, 
+        avg(s.salary) as avg_salary 
+		from dept_emp de, salaries s
+        where de.emp_no=s.emp_no
+		and de.to_date='9999-01-01'
+		and s.to_date='9999-01-01'
+		group by de.dept_no) as d
 where e.emp_no=de.emp_no 
 and e.emp_no=s.emp_no 
 and d.dept_num=de.dept_no
 and d.avg_salary <= s.salary
 and s.to_date='9999-01-01' 
 and de.to_date='9999-01-01';
-
 
 -- 문제4. (중요!) join 문제
 -- 현재, 사원들의 사번, 이름, 매니저 이름, 부서 이름으로 출력해 보세요.
@@ -112,7 +122,14 @@ having avg_salary = (select max(avg_salary)
 -- 현재 자신의 매니저보다 높은 연봉을 받고 있는 직원은?
 -- 부서이름, 사원이름, 연봉, 매니저 이름, 메니저 연봉 순으로 출력합니다.
 
-select m.m_dept_no as '부서 코드', m.m_dept_name as '부서이름', e.emp_no as '사번', concat(e.first_name,' ',e.last_name) as '이름', s.salary as '연봉', m.m_name as '매니저 이름' , m.m_salary as '매니저 연봉'
+select 
+	m.m_dept_no as '부서 코드',
+    m.m_dept_name as '부서이름',
+    e.emp_no as '사번',
+    concat(e.first_name,' ',e.last_name) as '이름', 
+    s.salary as '연봉', 
+    m.m_name as '매니저 이름' , 
+    m.m_salary as '매니저 연봉'
 from employees e 
 join dept_emp de on e.emp_no=de.emp_no
 join departments d on de.dept_no=d.dept_no
@@ -130,5 +147,3 @@ on de.dept_no=m.m_dept_no
 where de.to_date='9999-01-01' and s.to_date='9999-01-01'
 and s.salary > m.m_salary
 order by m.m_dept_no;
-
-
