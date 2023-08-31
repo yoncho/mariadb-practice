@@ -71,10 +71,51 @@ from titles t join salaries s using(emp_no)
 where t.to_date='9999-01-01'
 and s.to_date='9999-01-01';
 
--- 햐결 2. join ~ on 사용
+-- 해결 2. join ~ on 사용
 select t.title, s.salary
 from titles t join salaries s on t.emp_no=s.emp_no
 where t.to_date='9999-01-01'
-and s.to_date='9999-01-01'
+and s.to_date='9999-01-01';
+
+-- 실습문제1
+-- 현재, 직원별 근무 부서를 출력.
+-- 사번, 직원 이름, 
+select e.emp_no, e.first_name, d.dept_name
+from employees e join dept_emp de on e.emp_no=de.emp_no
+join departments d on de.dept_no=d.dept_no
+where de.to_date='9999-01-01';
+
+select a.emp_no, a.first_name, b.dept_name
+from employees a, departments b, dept_emp c
+where a.emp_no=c.emp_no and c.dept_no=b.dept_no
+and c.to_date='9999-01-01';
+
+-- 실습문제2
+-- 현재, 직책별 평균 연봉과 직원수를 구하되 직책별 직원 수가 100명 이상인 직책만 출력하세요.
+-- 직책, 평균연봉, 직원만 출력
+select t.title, avg(s.salary) ,count(*)
+from titles t join salaries s on t.emp_no=s.emp_no
+where t.to_date='9999-01-01' and s.to_date='9999-01-01'
+group by t.title
+having count(*) >= 100;
+
+select a.title, avg(b.salary), count(*)
+from titles a, salaries b
+where a.emp_no=b.emp_no
+and a.to_date='9999-01-01' and b.to_date='9999-01-01'
+group by a.title
+having count(*) > 100;
+
+
+-- 실습문제3
+-- 현재, 부서별로 직책이 Engineer인 직원들에 대해서만 평균 연봉 구하기
+-- 부서 이름, 평균 급여
+select a.dept_name, avg(d.salary)
+from departments a, dept_emp b, titles c, salaries d
+where a.dept_no=b.dept_no and b.emp_no=c.emp_no and c.emp_no=d.emp_no
+and b.to_date='9999-01-01' and c.to_date='9999-01-01' and d.to_date='9999-01-01'
+and c.title = 'engineer'
+group by a.dept_name
+order by avg(d.salary) desc;
 
 
