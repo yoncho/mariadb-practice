@@ -120,8 +120,27 @@ having avg_salary = (select max(avg_salary)
 
 -- 문제8. (순수 join)
 -- 현재 자신의 매니저보다 높은 연봉을 받고 있는 직원은?
--- 부서이름, 사원이름, 연봉, 매니저 이름, 메니저 연봉 순으로 출력합니다.
+-- 부서이름, 사원이름, 연봉, 매니저 이름, 메니저 연봉 순으로 출력합니다.	
+-- 순수 join
+select 
+	dprt.dept_no as '부서 코드',
+    dprt.dept_name as '부서이름',
+    emp.emp_no as '사번',
+    concat(emp.first_name,' ',emp.last_name) as '이름', 
+    emp_salary.salary as '연봉', 
+    concat(mngr.first_name,' ',mngr.last_name) as '매니저 이름' , 
+    mngr_salary.salary as '매니저 연봉'
+from employees emp
+join salaries emp_salary on emp.emp_no=emp_salary.emp_no and emp_salary.to_date='9999-01-01'
+join dept_emp dept on emp.emp_no=dept.emp_no and dept.to_date='9999-01-01'
+join departments dprt on dept.dept_no=dprt.dept_no 
+join dept_manager dmngr on dprt.dept_no=dmngr.dept_no and dmngr.to_date='9999-01-01'
+join employees mngr on dmngr.emp_no=mngr.emp_no
+join salaries mngr_salary on mngr.emp_no=mngr_salary.emp_no and mngr_salary.to_date='9999-01-01'
+where emp_salary.salary > mngr_salary.salary
+order by dprt.dept_name, emp_salary.salary;
 
+-- subquery			
 select 
 	m.m_dept_no as '부서 코드',
     m.m_dept_name as '부서이름',
@@ -148,27 +167,3 @@ where de.to_date='9999-01-01' and s.to_date='9999-01-01'
 and s.salary > m.m_salary
 order by m.m_dept_no;
 
-SELECT
-    dept.dept_name AS "부서이름",
-    emp.first_name AS "사원이름",
-    emp_sal.salary AS "연봉",
-    mgr.first_name AS "매니저 이름",
-    mgr_sal.salary AS "매니저 연봉"
-FROM
-    employees emp
-JOIN
-    salaries emp_sal ON emp.emp_no = emp_sal.emp_no AND emp_sal.to_date = '9999-01-01'
-JOIN
-    dept_emp demp ON emp.emp_no = demp.emp_no AND demp.to_date = '9999-01-01'
-JOIN
-    departments dept ON demp.dept_no = dept.dept_no
-JOIN
-    dept_manager dmgr ON dept.dept_no = dmgr.dept_no AND dmgr.to_date = '9999-01-01'
-JOIN
-    employees mgr ON dmgr.emp_no = mgr.emp_no
-JOIN
-    salaries mgr_sal ON mgr.emp_no = mgr_sal.emp_no AND mgr_sal.to_date = '9999-01-01'
-WHERE
-    emp_sal.salary > mgr_sal.salary
-ORDER BY
-    dept.dept_name, emp_sal.salary DESC;
