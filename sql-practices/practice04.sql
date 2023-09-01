@@ -32,11 +32,7 @@ and s.salary=max_dept.s_max_salary;
 -- 문제3. where x... 크다 조건... from절에 join 하는 방식...!!
 -- 현재, 자신의 부서 평균 급여보다 연봉(salary)이 많은 사원의 사번, 이름과 연봉을 조회하세요 
 
-select 
-	e.emp_no, 
-    concat(e.first_name,' ',e.last_name) as '이름', 
-    s.salary, 
-    d.avg_salary
+select e.emp_no as '사번', concat(e.first_name,' ',e.last_name) as '이름', s.salary as '연봉',  d.avg_salary as '부서 평균 연봉'
 from 
 	employees e, 
     dept_emp de, 
@@ -59,10 +55,12 @@ and de.to_date='9999-01-01';
 -- 문제4. (중요!) join 문제
 -- 현재, 사원들의 사번, 이름, 매니저 이름, 부서 이름으로 출력해 보세요.
 
-select e.emp_no as '사번', concat(e.first_name,' ',e.last_name) as '이름', manager.manager_dept_name
-from employees e, (select dm.emp_no as manager_emp_no, d.dept_name as manager_dept_name
-				   from departments d join dept_manager dm on dm.dept_no=d.dept_no
-				   where dm.to_date='9999-01-01') as manager
+select e.emp_no as '사번', concat(e.first_name,' ',e.last_name) as '이름', manager.manager_dept_name as '매니저 이름'
+from employees e, 
+	(select dm.emp_no as manager_emp_no, d.dept_name as manager_dept_name
+	from departments d join dept_manager dm on dm.dept_no=d.dept_no
+	where dm.to_date='9999-01-01') 
+as manager
 where manager.manager_emp_no=e.emp_no;
 
 -- 문제5.
@@ -90,14 +88,14 @@ order by s.salary;
 -- 문제6.
 -- 평균 연봉이 가장 높은 부서는? ex) 총무 20000 출력
 
-select d.dept_name, avg(s.salary) as avg_salary
+select d.dept_name as '부서명', avg(s.salary) as '평균 연봉'
 from dept_emp de, salaries s, departments d
 where de.emp_no=s.emp_no
 and d.dept_no = de.dept_no
 and de.to_date='9999-01-01'
 and s.to_date='9999-01-01'
 group by de.dept_no
-having avg_salary=(select max(d_max_salary)
+having avg(s.salary) =(select max(d_max_salary)
 				   from (select de.dept_no as d_dept_no, avg(s.salary) as d_max_salary
 						 from dept_emp de, salaries s
 						 where de.emp_no=s.emp_no
@@ -108,11 +106,11 @@ having avg_salary=(select max(d_max_salary)
 -- 문제7.
 -- 평균 연봉이 가장 높은 직책? ex) enginner 40000
 
-select t.title, avg(s.salary) as avg_salary
+select t.title as '직책', avg(s.salary) as '평균 연봉'
 from titles t, salaries s
 where t.emp_no=s.emp_no
 group by t.title 
-having avg_salary = (select max(avg_salary)
+having avg(s.salary) = (select max(avg_salary)
 					from (select t.title, avg(s.salary) as avg_salary	
 					from titles t, salaries s
 					where t.emp_no=s.emp_no
