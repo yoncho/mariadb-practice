@@ -147,3 +147,28 @@ on de.dept_no=m.m_dept_no
 where de.to_date='9999-01-01' and s.to_date='9999-01-01'
 and s.salary > m.m_salary
 order by m.m_dept_no;
+
+SELECT
+    dept.dept_name AS "부서이름",
+    emp.first_name AS "사원이름",
+    emp_sal.salary AS "연봉",
+    mgr.first_name AS "매니저 이름",
+    mgr_sal.salary AS "매니저 연봉"
+FROM
+    employees emp
+JOIN
+    salaries emp_sal ON emp.emp_no = emp_sal.emp_no AND emp_sal.to_date = '9999-01-01'
+JOIN
+    dept_emp demp ON emp.emp_no = demp.emp_no AND demp.to_date = '9999-01-01'
+JOIN
+    departments dept ON demp.dept_no = dept.dept_no
+JOIN
+    dept_manager dmgr ON dept.dept_no = dmgr.dept_no AND dmgr.to_date = '9999-01-01'
+JOIN
+    employees mgr ON dmgr.emp_no = mgr.emp_no
+JOIN
+    salaries mgr_sal ON mgr.emp_no = mgr_sal.emp_no AND mgr_sal.to_date = '9999-01-01'
+WHERE
+    emp_sal.salary > mgr_sal.salary
+ORDER BY
+    dept.dept_name, emp_sal.salary DESC;
