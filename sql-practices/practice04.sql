@@ -55,6 +55,17 @@ and de.to_date='9999-01-01';
 -- 문제4. (중요!) join 문제
 -- 현재, 사원들의 사번, 이름, 매니저 이름, 부서 이름으로 출력해 보세요.
 
+select emp.emp_no as '사번', 
+concat(emp.first_name,' ',emp.last_name) as '이름',
+ concat(mngr.first_name,' ',mngr.last_name) as '매니저 이름', 
+ dprt.dept_name as '부서명'
+from employees emp
+join dept_emp demp on emp.emp_no=demp.emp_no and demp.to_date='9999-01-01'
+join departments dprt on demp.dept_no=dprt.dept_no 
+join dept_manager dmngr on dprt.dept_no=dmngr.dept_no and dmngr.to_date='9999-01-01'
+join employees mngr on dmngr.emp_no=mngr.emp_no
+order by emp.emp_no;
+
 select e.emp_no as '사번', concat(e.first_name,' ',e.last_name) as '이름', manager.manager_dept_name as '매니저 이름'
 from employees e, 
 	(select dm.emp_no as manager_emp_no, d.dept_name as manager_dept_name
