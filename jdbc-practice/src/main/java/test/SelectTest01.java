@@ -23,7 +23,7 @@ public class SelectTest01 {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.181:3307/employees?charset=utf8";
-			conn = DriverManager.getConnection(url, "hr", "tkaak1212");
+			conn = DriverManager.getConnection(url, "hr", "*****");
 			
 			System.out.println("연결 성공!");
 			

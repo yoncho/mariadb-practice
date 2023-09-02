@@ -14,7 +14,7 @@ public class TestConnection {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.181:3307/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "yoncho", "TKAAK1212");
+			conn = DriverManager.getConnection(url, "yoncho", "*****");
 			
 			System.out.println("연결 성공!");
 			
