@@ -3,51 +3,49 @@ package test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SelectTest01 {
+public class UpdateTest02 {
 
 	public static void main(String[] args) {
-		searchEmployees("ko");
-
+		DeptVo vo = new DeptVo();
+		vo.setName("품질관리팀");
+		vo.setNo(2L);
+		boolean result = updateDepartment(vo);
+		System.out.println(result ? "성공":"실패");
 	}
-	public static void searchEmployees(String keyword) {
+
+	private static boolean updateDepartment(DeptVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		boolean result = false;
 		
 		try {
 			//1. JDBC Driver Class 로딩
 			Class.forName("org.mariadb.jdbc.Driver");
 			
 			//2. 연결하기
-			String url = "jdbc:mariadb://192.168.0.181:3307/employees?charset=utf8";
-			conn = DriverManager.getConnection(url, "hr", "********");
+			String url = "jdbc:mariadb://192.168.0.181:3307/webdb?charset=utf8";
+			conn = DriverManager.getConnection(url, "yoncho", "********");
 			
 			System.out.println("연결 성공!");
 			
 			//3. Statement 객체 생성
-			String sql = "select emp_no, first_name, last_name"
-					+ " from employees"
-					+ " where first_name like ?"
-					+ " and last_name like ?";
+			String sql = "update dept set name=? where no=?";
+			
 			pstmt = conn.prepareStatement(sql);
 			
 			//4. 값 binding
-			pstmt.setString(1, "%"+keyword+"%" );
-			pstmt.setString(2, "%"+keyword+"%" );
-			rs =  pstmt.executeQuery();
+			pstmt.setString(1, vo.getName());
+			pstmt.setLong(2, vo.getNo());
+			//4. SQL 실행
 			
-			System.out.println(rs);
+
+			int count =  pstmt.executeUpdate(); //any query - execute,  select - executeQuery, others - executeUpdate
+
+			
 			//5. 결과 처리
-			while (rs.next()) {
-				Long empNo = rs.getLong(1);
-				String firstName = rs.getString(2);
-				String lastName = rs.getString(3);
-				
-				System.out.println(empNo + ":" + firstName + " " + lastName);
-			}
+			result = count == 1;
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패 : " + e);
@@ -56,9 +54,6 @@ public class SelectTest01 {
 		} finally{
 			try {
 				//6. 자원 정리
-				if(rs != null) {
-					rs.close();
-				}
 				if(pstmt != null) {
 					pstmt.close();
 				}
@@ -71,5 +66,7 @@ public class SelectTest01 {
 			}
 		
 		}
+		return result;
 	}
+
 }
