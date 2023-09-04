@@ -9,7 +9,16 @@ public class EmployeesDaoTest {
 
 	public static void main(String[] args) {
 		
-		testFindByName("mah");
+//		testFindByName("mah");
+		testFindBySalary(10000, 50000);
+		
+	}
+
+	private static void testFindBySalary(int minSalary, int maxSalary) {
+		List<EmployeesVo> list = new EmployeesDao().findBySalary(minSalary, maxSalary);
+		for(EmployeesVo vo: list) {
+			System.out.println(vo);
+		}
 		
 	}
 
