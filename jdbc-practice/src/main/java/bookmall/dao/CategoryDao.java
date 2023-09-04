@@ -8,15 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bookmall.vo.CategoryVo;
 import bookmall.vo.MemberVo;
-import bookshop.vo.BookVo;
 
-public class MemberDao {
+public class CategoryDao {
 	private final String URL = "jdbc:mariadb://192.168.0.181:3307/bookmall?charset=utf8";
 	private final String ID = "bookmall";
 	private final String PW = "bookmall";
 	
-	public boolean insert(MemberVo vo) {
+	public boolean insert(CategoryVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
@@ -29,14 +29,11 @@ public class MemberDao {
 			conn = DriverManager.getConnection(URL, ID, PW);
 			
 			//3. Member 등록
-			String authorSql = "insert into member values (?,?,?,?,?)";
+			String authorSql = "insert into category values (?,?)";
 			pstmt = conn.prepareStatement(authorSql);
 			
 			pstmt.setInt(1, vo.getNo());
 			pstmt.setString(2, vo.getName());
-			pstmt.setString(3, vo.getPhoneNumber());
-			pstmt.setString(4, vo.getEmail());
-			pstmt.setString(5, vo.getPassword());
 			
 			//4. 결과 
 			result =  pstmt.executeUpdate() == 1;
@@ -62,8 +59,8 @@ public class MemberDao {
 		return result;
 	}
 	
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
+	public List<CategoryVo> findAll() {
+		List<CategoryVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -76,7 +73,7 @@ public class MemberDao {
 			conn = DriverManager.getConnection(URL, ID, PW);
 			
 			//3. Statement 객체 생성
-			String sql = "select name, phone_number, email, password from member";
+			String sql = "select no, name from category";
 			pstmt = conn.prepareStatement(sql);
 			
 			//4. SQL 실행
@@ -84,17 +81,13 @@ public class MemberDao {
 
 			//5. 결과 처리
 			while (rs.next()) {
-				String name = rs.getString(1);
-				String phoneNumber = rs.getString(2);
-				String email = rs.getString(3);
-				String password = rs.getString(4);
+				int no = rs.getInt(1);
+				String name = rs.getString(2);
 				
-				MemberVo vo = new MemberVo();
+				CategoryVo vo = new CategoryVo();
+				vo.setNo(no);
 				vo.setName(name);
-				vo.setPhoneNumber(phoneNumber);
-				vo.setEmail(email);
-				vo.setPassword(password);
-				
+
 				result.add(vo);
 			}
 		} catch (ClassNotFoundException e) {
