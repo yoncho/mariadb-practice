@@ -92,12 +92,24 @@ public class BookMall {
 		for(MemberVo member : memberList)
 		{
 			System.out.println("이름 : " + member.getName() +
-							   "전화번호 : " + member.getPhoneNumber()+
-							   "이메일 : " + member.getEmail() +
-							   "비밀번호 : " + member.getPassword());
+							   " | 전화번호 : " + member.getPhoneNumber()+
+							   " | 이메일 : " + member.getEmail() +
+							   " | 비밀번호 : " + member.getPassword());
 		}	
 		System.out.println("## 카테고리"); //카테고리 3개
+		List<CategoryVo> categoryList = new CategoryDao().findAll();
+		for(CategoryVo cv: categoryList) {
+			System.out.println("No : " + cv.getNo()+
+							   " | 이름 : " + cv.getName());
+		}
 		System.out.println("## 상품"); //책 3
+		List<BookVo> bookList = new BookDao().findAll();
+		CategoryDao cd = new CategoryDao();
+		
+		for(BookVo bv: bookList) {
+			System.out.println("책제목 : " + bv.getTitle()+
+							   " | 가격 : " + bv.getPrice());
+		}
 		System.out.println("## 카트"); //2개
 		System.out.println("## 주문"); //1건
 		System.out.println("## 주문도서"); 

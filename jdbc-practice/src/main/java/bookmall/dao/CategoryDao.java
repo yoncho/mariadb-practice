@@ -59,6 +59,56 @@ public class CategoryDao {
 		return result;
 	}
 	
+	public String findByNo(int no) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String result = null;
+		
+		try {
+			//1. JDBC Driver Class 로딩
+			Class.forName("org.mariadb.jdbc.Driver");
+			
+			//2. 연결하기
+			conn = DriverManager.getConnection(URL, ID, PW);
+			
+			//3. Statement 객체 생성
+			String sql = "select name from category where no=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			//4. Binding
+			pstmt.setInt(1, no);
+			
+			//5. SQL 실행
+			rs =  pstmt.executeQuery();
+
+			//6. 결과 처리
+			rs.next();
+			result = rs.getString(1);
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패 : " + e);
+		} catch(SQLException e) {
+			System.out.println("error:" + e);
+		} finally{
+			try {
+				//6. 자원 정리
+				if(rs != null) {
+					rs.close();
+				}
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null && !conn.isClosed())
+				{
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public List<CategoryVo> findAll() {
 		List<CategoryVo> result = new ArrayList<>();
 		Connection conn = null;

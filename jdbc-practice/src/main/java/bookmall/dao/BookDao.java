@@ -75,7 +75,7 @@ public class BookDao {
 			conn = DriverManager.getConnection(URL, ID, PW);
 			
 			//3. Statement 객체 생성
-			String sql = "select title, price from book";
+			String sql = "select title, price, category_no from book";
 			pstmt = conn.prepareStatement(sql);
 			
 			//4. SQL 실행
@@ -85,10 +85,11 @@ public class BookDao {
 			while (rs.next()) {
 				String title = rs.getString(1);
 				int price = rs.getInt(2);
-				
+				int categoryNo = rs.getInt(3);
 				BookVo vo = new BookVo();
 				vo.setTitle(title);
 				vo.setPrice(price);
+				vo.setCategoryNo(categoryNo);
 
 				result.add(vo);
 			}
