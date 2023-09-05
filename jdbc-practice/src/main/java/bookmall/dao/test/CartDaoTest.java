@@ -15,7 +15,7 @@ public class CartDaoTest {
 	
 	private static void testInsert() {
 		CartDao cartDao = new CartDao();
-		CartVo cv = new CartVo();
+		CartVo cv = new CartVo(); 
 		cv.setMemberNo(new MemberDao().findNoByName("yoncho"));
 		cv.setBookNo(new BookDao().findNoByTitle("우주와 우주"));
 		cv.setBookCount(2);

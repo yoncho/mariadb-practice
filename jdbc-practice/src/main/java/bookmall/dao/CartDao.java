@@ -25,7 +25,7 @@ public class CartDao {
 		try {
 			conn = getConnection();
 			//check 
-			String checkSql = "select count(*), count from cart where member_no=? and book_no=?";
+			String checkSql = "select count(*) from cart where member_no=? and book_no=?";
 			pstmt = conn.prepareStatement(checkSql);
 			pstmt.setInt(1, vo.getMemberNo());
 			pstmt.setInt(2, vo.getBookNo());
@@ -35,15 +35,14 @@ public class CartDao {
 			//Check : 기존 Cart에 동일한 책이 존재할 시 해당 책의 Count를 증가/ 없을시 새로운 필드 생성
 			int fieldCount = rs.getInt(1);
 			if (fieldCount > 0) {
-				int currentBookCount = rs.getInt(2);
-				String updateSql = "update cart set count=? where member_no=? and book_no=?";
+				String updateSql = "update cart set count=count+? where member_no=? and book_no=?";
 				pstmt = conn.prepareStatement(updateSql);
-				pstmt.setInt(1, currentBookCount + vo.getBookCount());
+				pstmt.setInt(1, vo.getBookCount());
 				pstmt.setInt(2, vo.getMemberNo());
 				pstmt.setInt(3, vo.getBookNo());
 			}else{
 				//create field in cart
-				String insertSql = "insert into cart values (?,?,?)";
+				String insertSql = "insert into cart values (null,?,?,?)";
 				pstmt = conn.prepareStatement(insertSql);
 				pstmt.setInt(1, vo.getMemberNo());
 				pstmt.setInt(2, vo.getBookNo());
