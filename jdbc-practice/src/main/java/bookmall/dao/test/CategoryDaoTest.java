@@ -32,15 +32,21 @@ public class CategoryDaoTest {
 		//Category#3 setting
 		CategoryVo categoryVo3 = new CategoryVo();
 		categoryVo3.setName("과학");
+		CategoryVo categoryVo4 = new CategoryVo();
+		categoryVo4.setName("과학");
+		
 		
 		//Category#1,#2,#3 insert & check result
 		result = false;
 		result = categoryDao.insert(categoryVo1);
-		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
+		System.out.println(categoryVo1.getName() + (result ? " insert ok":" insert fail"));
 		result = categoryDao.insert(categoryVo2);
-		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
+		System.out.println(categoryVo2.getName() + (result ? " insert ok":" insert fail"));
 		result = categoryDao.insert(categoryVo3);
-		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
+		System.out.println(categoryVo3.getName() + (result ? " insert ok":" insert fail"));
+		//이미 존재하는 카테고리를 또 insert하려는 경우 insert 실패 되어야함..!
+		result = categoryDao.insert(categoryVo4);
+		System.out.println(categoryVo4.getName() + (result ? " insert ok":" insert fail"));
 	}
 	
 }

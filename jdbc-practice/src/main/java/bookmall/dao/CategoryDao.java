@@ -20,31 +20,30 @@ public class CategoryDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
-		
+		ResultSet rs = null;
 		try {
-			//1. JDBC Driver Class 로딩
-			Class.forName("org.mariadb.jdbc.Driver");
+			conn =  getConnection();
 			
-			//2. 연결하기
-			conn = DriverManager.getConnection(URL, ID, PW);
+			//Check : 카테고리가 이미 있는지 확인
+			String checkSql = "select count(*) from category where name=?";
+			pstmt = conn.prepareStatement(checkSql);
+			pstmt.setString(1, vo.getName());
+			rs = pstmt.executeQuery();
+			rs.next();
 			
-			//3. Member 등록
-			String authorSql = "insert into category values (?,?)";
-			pstmt = conn.prepareStatement(authorSql);
-			
-			pstmt.setInt(1, vo.getNo());
-			pstmt.setString(2, vo.getName());
-			
-			//4. 결과 
-			result =  pstmt.executeUpdate() == 1;
-			
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 : " + e);
+			//만약 카테고리가 존재하지 않는다면 insert
+			if(rs.getInt(1) == 0) {
+				String authorSql = "insert into category values (?,?)";
+				pstmt = conn.prepareStatement(authorSql);	
+				pstmt.setInt(1, vo.getNo());
+				pstmt.setString(2, vo.getName());
+
+				result =  pstmt.executeUpdate() == 1;
+			}
 		} catch(SQLException e) {
 			System.out.println("error:" + e);
 		} finally{
 			try {
-				//5. 자원 정리
 				if(pstmt != null) {
 					pstmt.close();
 				}
@@ -66,32 +65,18 @@ public class CategoryDao {
 		String result = null;
 		
 		try {
-			//1. JDBC Driver Class 로딩
-			Class.forName("org.mariadb.jdbc.Driver");
+			conn =  getConnection();
 			
-			//2. 연결하기
-			conn = DriverManager.getConnection(URL, ID, PW);
-			
-			//3. Statement 객체 생성
 			String sql = "select name from category where no=?";
 			pstmt = conn.prepareStatement(sql);
-			
-			//4. Binding
 			pstmt.setInt(1, no);
-			
-			//5. SQL 실행
 			rs =  pstmt.executeQuery();
-
-			//6. 결과 처리
 			rs.next();
 			result = rs.getString(1);
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 : " + e);
 		} catch(SQLException e) {
 			System.out.println("error:" + e);
 		} finally{
 			try {
-				//6. 자원 정리
 				if(rs != null) {
 					rs.close();
 				}
@@ -116,20 +101,12 @@ public class CategoryDao {
 		ResultSet rs = null;
 		
 		try {
-			//1. JDBC Driver Class 로딩
-			Class.forName("org.mariadb.jdbc.Driver");
+			conn = getConnection();
 			
-			//2. 연결하기
-			conn = DriverManager.getConnection(URL, ID, PW);
-			
-			//3. Statement 객체 생성
 			String sql = "select no, name from category";
 			pstmt = conn.prepareStatement(sql);
-			
-			//4. SQL 실행
 			rs =  pstmt.executeQuery();
 
-			//5. 결과 처리
 			while (rs.next()) {
 				int no = rs.getInt(1);
 				String name = rs.getString(2);
@@ -140,13 +117,10 @@ public class CategoryDao {
 
 				result.add(vo);
 			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 : " + e);
 		} catch(SQLException e) {
 			System.out.println("error:" + e);
 		} finally{
 			try {
-				//6. 자원 정리
 				if(rs != null) {
 					rs.close();
 				}
@@ -162,5 +136,16 @@ public class CategoryDao {
 			}
 		}
 		return result;	
+	}
+	
+	private Connection getConnection() throws SQLException {
+		Connection conn = null;
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			conn = DriverManager.getConnection(URL, ID, PW);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return conn;
 	}
 }

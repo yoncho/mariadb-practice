@@ -3,9 +3,11 @@ package bookmall.main;
 import java.util.List;
 
 import bookmall.dao.BookDao;
+import bookmall.dao.CartDao;
 import bookmall.dao.CategoryDao;
 import bookmall.dao.MemberDao;
 import bookmall.vo.BookVo;
+import bookmall.vo.CartVo;
 import bookmall.vo.CategoryVo;
 import bookmall.vo.MemberVo;
 
@@ -53,9 +55,9 @@ public class BookMall {
 		result = categoryDao.insert(categoryVo1);
 		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
 		result = categoryDao.insert(categoryVo2);
-		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
+		System.out.println(categoryVo2.getName() + (result ? " insert ok":"insert fail"));
 		result = categoryDao.insert(categoryVo3);
-		System.out.println(categoryVo1.getName() + (result ? " insert ok":"insert fail"));
+		System.out.println(categoryVo3.getName() + (result ? " insert ok":"insert fail"));
 
 //Product: Book
 		BookDao bookDao = new BookDao();
@@ -85,23 +87,62 @@ public class BookMall {
 		System.out.println(bookVo2.getTitle() +(result ? " insert ok":"insert fail"));
 		result = bookDao.insert(bookVo3);
 		System.out.println(bookVo3.getTitle() +(result ? " insert ok":"insert fail"));
+	
+//Cart : add book 
+		CartDao cartDao = new CartDao();
+		CartVo cv = new CartVo();
+		int memberPK = 1; //yoncho
+		cv.setMemberNo(memberPK);
+		cv.setBookNo(new BookDao().findNoByTitle("이것이 자바다"));
+		cv.setBookCount(2);
+		
+		cartDao.insert(cv);
+		
+		cv.setMemberNo(memberPK);
+		cv.setBookNo(new BookDao().findNoByTitle("탐정소설"));
+		cv.setBookCount(3);
+		cartDao.insert(cv);
+		
+		memberPK = 2; //hello 
+		//new MemberDao().findNoByName("hello") 이 방식도 있음.
+		cv.setMemberNo(memberPK);
+		cv.setBookNo(new BookDao().findNoByTitle("이것이 자바다"));
+		cv.setBookCount(4);
+		
+		cartDao.insert(cv);
+		
+		cv.setMemberNo(memberPK);
+		cv.setBookNo(new BookDao().findNoByTitle("탐정소설"));
+		cv.setBookCount(5);
+		
+		result = cartDao.insert(cv);
+		System.out.println(result ? "성공":"실패");
+		
+//Order
+		
+//Order Book
+	
+		
 		
 //PrintArea
 		System.out.println("## 회원리스트"); //2명
 		List<MemberVo> memberList = memberDao.findAll();
 		for(MemberVo member : memberList)
 		{
-			System.out.println("이름 : " + member.getName() +
+			System.out.println("고유식별 번호 : " + member.getNo()+
+							   " | 이름 : " + member.getName() +
 							   " | 전화번호 : " + member.getPhoneNumber()+
 							   " | 이메일 : " + member.getEmail() +
 							   " | 비밀번호 : " + member.getPassword());
 		}	
+		
 		System.out.println("## 카테고리"); //카테고리 3개
 		List<CategoryVo> categoryList = new CategoryDao().findAll();
-		for(CategoryVo cv: categoryList) {
-			System.out.println("No : " + cv.getNo()+
-							   " | 이름 : " + cv.getName());
+		for(CategoryVo cvo: categoryList) {
+			System.out.println("No : " + cvo.getNo()+
+							   " | 이름 : " + cvo.getName());
 		}
+		
 		System.out.println("## 상품"); //책 3
 		List<BookVo> bookList = new BookDao().findAll();
 		CategoryDao cd = new CategoryDao();
@@ -110,8 +151,18 @@ public class BookMall {
 			System.out.println("책제목 : " + bv.getTitle()+
 							   " | 가격 : " + bv.getPrice());
 		}
+		
 		System.out.println("## 카트"); //2개
+		for (MemberVo mvo : new MemberDao().findAll()) {
+			System.out.println("==========[" + mvo.getName()+"`s Cart]==========");
+			for(CartVo vo : new CartDao().findAllByMember(mvo.getNo()))
+			{
+				System.out.println(vo);
+			}
+		}
+		
 		System.out.println("## 주문"); //1건
+		
 		System.out.println("## 주문도서"); 
 		
 		
