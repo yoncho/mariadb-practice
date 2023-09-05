@@ -24,7 +24,7 @@ select * from author;
 select * from author 
 where name='김동인';
 
-insert into book(title, author_no) set('hello', select no from author where name='김동인');
+insert into book(title, author_no) select 'hello', no from author where name='김동인';
 select b.no, b.title, b.rent, a.name 
 from book b, author a
 where b.author_no=a.no;
