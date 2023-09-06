@@ -1,14 +1,15 @@
 package bookmall.vo;
 
 public class OrderBookVo {
-	private int orderNo;
+	private String orderNo;
 	private int bookNo;
 	private int bookCount;
 	private int bookPrice;
-	public int getOrderNo() {
+	
+	public String getOrderNo() {
 		return orderNo;
 	}
-	public void setOrderNo(int orderNo) {
+	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
 	public int getBookNo() {

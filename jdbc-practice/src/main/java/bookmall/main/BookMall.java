@@ -123,12 +123,14 @@ public class BookMall {
 		
 //Order
 		//1) order
-		OrderVo ov = new OrderVo();
 		int memberNo = new MemberDao().findNoByName("yoncho");
-		ov.setNo(1);
+		String orderNo = new OrderDao().orderNoGenerator(memberNo);
+		
+		OrderVo ov = new OrderVo();
 		ov.setMemberNo(memberNo);
 		ov.setShippingAddress("서울특별시 강남구 비트컴퓨터 3층 서31강의실");
-		ov.setOrderNo(new OrderDao().orderNoGenerator(memberNo));
+		ov.setOrderNo(orderNo);
+		ov.setTotalPrice(0);
 		result = new OrderDao().insertOrder(ov);
 		System.out.println(result ? "성공":"실패");
 		
@@ -136,8 +138,7 @@ public class BookMall {
 		//2-1) orderBook#1
 		OrderBookVo obv = new OrderBookVo();
 		BookVo bv = new BookDao().findByBookNo(new BookDao().findNoByTitle("이것이 자바다"));
-		
-		obv.setOrderNo(ov.getNo());
+		obv.setOrderNo(orderNo);
 		obv.setBookNo(bv.getNo());
 		obv.setBookCount(2);
 		obv.setBookPrice(bv.getPrice());
@@ -147,10 +148,9 @@ public class BookMall {
 		//2-2) orderBook#2
 		obv = new OrderBookVo();
 		bv = new BookDao().findByBookNo(new BookDao().findNoByTitle("우주와 우주"));
-		
-		obv.setOrderNo(ov.getNo());
+		obv.setOrderNo(orderNo);
 		obv.setBookNo(bv.getNo());
-		obv.setBookCount(3);
+		obv.setBookCount(2);
 		obv.setBookPrice(bv.getPrice());
 		result = new OrderDao().insertOrderBook(obv);
 		System.out.println(result ? "성공":"실패");

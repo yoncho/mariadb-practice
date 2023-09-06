@@ -103,19 +103,18 @@ public class OrderDao {
 			
 			String insertSql = "insert into order_book values (null,?,?,?,?)";
 			pstmt = conn.prepareStatement(insertSql);
-			
 			pstmt.setInt(1, vo.getBookCount());
 			pstmt.setInt(2, vo.getBookPrice());
-			pstmt.setInt(3, vo.getOrderNo());
+			pstmt.setString(3, vo.getOrderNo());
 			pstmt.setInt(4, vo.getBookNo());
 			
 			result = pstmt.executeUpdate() > 0;
 			
 			//Order totalPrice Update
-			String updateSql = "update orders set total_price=total_price + ? where no=?";
+			String updateSql = "update orders set total_price=total_price + ? where order_no=?";
 			pstmt = conn.prepareStatement(updateSql);
 			pstmt.setInt(1, vo.getBookCount() * vo.getBookPrice());
-			pstmt.setInt(2, vo.getOrderNo());
+			pstmt.setString(2, vo.getOrderNo());
 			result = pstmt.executeUpdate() > 0;
 		
 		} catch(SQLException e) {
@@ -135,8 +134,6 @@ public class OrderDao {
 		}
 		return result;
 	}
-	
-	
 	
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
