@@ -26,7 +26,7 @@ public class BookDao {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.181:3307/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "yoncho", "tkaak1212");
+			conn = DriverManager.getConnection(url, "*******", "*******");
 			
 			//3. Statement 객체 생성
 			String sql = "select b.no, b.title, b.rent, a.name"
@@ -148,7 +148,7 @@ public class BookDao {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.181:3307/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "yoncho", "tkaak1212");
+			conn = DriverManager.getConnection(url, "*******", "*******");
 			
 			//3. Statement 객체 생성
 			String sql = "update book set rent=? where no=? and rent=?";
