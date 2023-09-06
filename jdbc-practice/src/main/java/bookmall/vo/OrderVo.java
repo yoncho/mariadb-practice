@@ -1,11 +1,12 @@
 package bookmall.vo;
 
-public class OrderVo {
+public class OrderVo{
 	private int no;
 	private String orderNo;
 	private int totalPrice = 0;
 	private String shippingAddress;
 	private int memberNo;
+	
 	public int getNo() {
 		return no;
 	}

@@ -1,15 +1,31 @@
 package bookmall.vo;
 
+import bookmall.dao.BookDao;
+
 public class OrderBookVo {
-	private String orderNo;
+	private int no;
+	private int orderNo;
 	private int bookNo;
 	private int bookCount;
 	private int bookPrice;
+	private String bookTitle;
 	
-	public String getOrderNo() {
+	public String getBookTitle() {
+		return bookTitle;
+	}
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
+	public int getNo() {
+		return no;
+	}
+	public void setNo(int no) {
+		this.no = no;
+	}
+	public int getOrderNo() {
 		return orderNo;
 	}
-	public void setOrderNo(String orderNo) {
+	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
 	}
 	public int getBookNo() {

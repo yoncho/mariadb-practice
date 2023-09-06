@@ -122,8 +122,9 @@ public class BookMall {
 		System.out.println(result ? "성공":"실패");
 		
 //Order
-		//1) order
+		//1) order - yoncho`s order
 		int memberNo = new MemberDao().findNoByName("yoncho");
+		//주문 번호 (멤버no-주문일자(년도월일시분초밀리초))
 		String orderNo = new OrderDao().orderNoGenerator(memberNo);
 		
 		OrderVo ov = new OrderVo();
@@ -136,9 +137,10 @@ public class BookMall {
 		
 //Order Book		
 		//2-1) orderBook#1
+		int no = new OrderDao().findNoByOrderNo(orderNo);
 		OrderBookVo obv = new OrderBookVo();
 		BookVo bv = new BookDao().findByBookNo(new BookDao().findNoByTitle("이것이 자바다"));
-		obv.setOrderNo(orderNo);
+		obv.setOrderNo(no);
 		obv.setBookNo(bv.getNo());
 		obv.setBookCount(2);
 		obv.setBookPrice(bv.getPrice());
@@ -147,25 +149,20 @@ public class BookMall {
 		
 		//2-2) orderBook#2
 		obv = new OrderBookVo();
-		bv = new BookDao().findByBookNo(new BookDao().findNoByTitle("우주와 우주"));
-		obv.setOrderNo(orderNo);
+		bv = new BookDao().findByBookNo(new BookDao().findNoByTitle("탐정소설"));
+		obv.setOrderNo(no);
 		obv.setBookNo(bv.getNo());
-		obv.setBookCount(2);
+		obv.setBookCount(3);
 		obv.setBookPrice(bv.getPrice());
 		result = new OrderDao().insertOrderBook(obv);
 		System.out.println(result ? "성공":"실패");
-		
 
-		
-		
-		
 //PrintArea
 		System.out.println("## 회원리스트"); //2명
 		List<MemberVo> memberList = memberDao.findAll();
 		for(MemberVo member : memberList)
 		{
-			System.out.println("고유식별 번호 : " + member.getNo()+
-							   " | 이름 : " + member.getName() +
+			System.out.println("이름 : " + member.getName() +
 							   " | 전화번호 : " + member.getPhoneNumber()+
 							   " | 이메일 : " + member.getEmail() +
 							   " | 비밀번호 : " + member.getPassword());
@@ -174,7 +171,7 @@ public class BookMall {
 		System.out.println("## 카테고리"); //카테고리 3개
 		List<CategoryVo> categoryList = new CategoryDao().findAll();
 		for(CategoryVo category: categoryList) {
-			System.out.println("No : " + category.getNo()+
+			System.out.println("카테고리 번호 : " + category.getNo()+
 							   " | 이름 : " + category.getName());
 		}
 		
@@ -182,7 +179,7 @@ public class BookMall {
 		List<BookVo> bookList = new BookDao().findAll();
 
 		for(BookVo book: bookList) {
-			System.out.println("책제목 : " + book.getTitle()+
+			System.out.println("도서 제목 : " + book.getTitle()+
 							   " | 가격 : " + book.getPrice());
 		}
 		
@@ -196,11 +193,19 @@ public class BookMall {
 		}
 		
 		System.out.println("## 주문"); //1건
+		OrderVo vo = new OrderDao().findByOrderNo(orderNo);
+		MemberVo mvo = new MemberDao().findByNo(vo.getMemberNo());
+		System.out.println("주문번호 : " + vo.getOrderNo()+
+						   " | 주문자(이름/이메일) : " + mvo.getName() + " / " + mvo.getEmail() +
+						   " | 결제금액 : " + vo.getTotalPrice() +
+						   " | 배송지 : " +  vo.getShippingAddress());
 		
 		System.out.println("## 주문도서"); //2개
-		
-		
-
-		
+		int findNo= new OrderDao().findNoByOrderNo(orderNo);
+		for(OrderBookVo ovo : new OrderDao().findAllOrderBookByOrderNo(findNo)){
+			System.out.println("도서 번호 : " + ovo.getBookNo() + 
+							   " | 도서 제목 : " + ovo.getBookTitle() +
+							   " | 수량 : "+  ovo.getBookCount());
+		}
 	}
 }

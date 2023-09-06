@@ -120,7 +120,6 @@ public class BookDao {
 			System.out.println("error:" + e);
 		} finally{
 			try {
-				//6. 자원 정리
 				if(rs != null) {
 					rs.close();
 				}

@@ -142,6 +142,53 @@ public class MemberDao {
 		return result;	
 	}
 	
+	public MemberVo findByNo(int memberNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MemberVo result = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "select name, phone_number, email, password  from member where no=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1,memberNo);
+			
+			rs =  pstmt.executeQuery();
+			rs.next();
+			
+			String name = rs.getString(1);
+			String phoneNumber = rs.getString(2);
+			String email = rs.getString(3);
+			String password = rs.getString(4);
+			result = new MemberVo();
+			result.setName(name);
+			result.setEmail(email);
+			result.setPhoneNumber(phoneNumber);
+			result.setPassword(password);
+		} catch(SQLException e) {
+			System.out.println("error:" + e);
+		} finally{
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null && !conn.isClosed())
+				{
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;	
+	}
+
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
