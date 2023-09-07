@@ -8,13 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bookmall.main.BookMall;
 import bookmall.vo.BookVo;
 import bookmall.vo.CartVo;
 
 public class CartDao {
-	private final String URL = "jdbc:mariadb://192.168.0.181:3307/bookmall?charset=utf8";
-	private final String ID = "bookmall";
-	private final String PW = "bookmall";
 	
 	public boolean insert(CartVo vo) {
 		Connection conn = null;
@@ -129,7 +127,7 @@ public class CartDao {
 		Connection conn = null;
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
-			conn = DriverManager.getConnection(URL, ID, PW);
+			conn = DriverManager.getConnection(BookMall.URL, BookMall.ID, BookMall.PW);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

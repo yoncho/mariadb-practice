@@ -15,7 +15,10 @@ import bookmall.vo.OrderBookVo;
 import bookmall.vo.OrderVo;
 
 public class BookMall {
-
+	public static final String URL = "jdbc:mariadb://192.168.0.181:3307/bookmall?charset=utf8";
+	public static final String ID = "bookmall";
+	public static final String PW = "bookmall";
+	
 	public static void main(String[] args) {
 //Member
 		MemberDao memberDao = new MemberDao();

@@ -10,16 +10,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import bookmall.vo.BookVo;
-import bookmall.vo.CartVo;
-import bookmall.vo.MemberVo;
+import bookmall.main.BookMall;
 import bookmall.vo.OrderBookVo;
 import bookmall.vo.OrderVo;
 
 public class OrderDao {
-	private final String URL = "jdbc:mariadb://192.168.0.181:3307/bookmall?charset=utf8";
-	private final String ID = "bookmall";
-	private final String PW = "bookmall";
 	
 	public boolean insertOrder(OrderVo vo) {
 		Connection conn = null;
@@ -289,7 +284,7 @@ public class OrderDao {
 		Connection conn = null;
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
-			conn = DriverManager.getConnection(URL, ID, PW);
+			conn = DriverManager.getConnection(BookMall.URL, BookMall.ID, BookMall.PW);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
