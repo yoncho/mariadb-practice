@@ -18,26 +18,38 @@ public class MemberDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
-		
+		ResultSet rs = null;
 		try {
 			conn = getConnection();
 			
-			String authorSql = "insert into member values (?,?,?,?,?)";
-			pstmt = conn.prepareStatement(authorSql);
-	
-			pstmt.setInt(1, vo.getNo());
-			pstmt.setString(2, vo.getName());
-			pstmt.setString(3, vo.getPhoneNumber());
-			pstmt.setString(4, vo.getEmail());
-			pstmt.setString(5, vo.getPassword());
+			//Check : 이미 등록된 사용자인지 확인
+			String checkQuery = "select count(*) from member where email=?";
+			pstmt = conn.prepareStatement(checkQuery);
+			pstmt.setString(1, vo.getEmail());
+			rs = pstmt.executeQuery();
+			rs.next();
 			
-			result =  pstmt.executeUpdate() == 1;
+			if(rs.getInt(1) == 0) {
+				String insertQuery = "insert into member values (?,?,?,?, password(?))";
+				pstmt = conn.prepareStatement(insertQuery);
+		
+				pstmt.setInt(1, vo.getNo());
+				pstmt.setString(2, vo.getName());
+				pstmt.setString(3, vo.getPhoneNumber());
+				pstmt.setString(4, vo.getEmail());
+				pstmt.setString(5, vo.getPassword());
+				
+				result =  pstmt.executeUpdate() == 1;
+			}
 		} catch(SQLException e) {
 			System.out.println("error:" + e);
 		} finally{
 			try {
 				if(pstmt != null) {
 					pstmt.close();
+				}
+				if(rs != null) {
+					rs.close();
 				}
 				if (conn != null && !conn.isClosed())
 				{

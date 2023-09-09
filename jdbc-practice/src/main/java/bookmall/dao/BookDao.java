@@ -17,26 +17,38 @@ public class BookDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
-		
+		ResultSet rs = null;
 		try {
 			conn = getConnection();
 
-			String authorSql = "insert into book values (?,?,?,?)";
-			pstmt = conn.prepareStatement(authorSql);
+			//Check : 동일한 카테고리, 동일한 이름의 도서가 이미 있는지 확인
+			String checkSql = "select count(*) from book where title=? and category_no=?";
+			pstmt = conn.prepareStatement(checkSql);
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setInt(2, vo.getCategoryNo());
+			rs = pstmt.executeQuery();
+			rs.next();
 			
-			pstmt.setInt(1, vo.getNo());
-			pstmt.setString(2, vo.getTitle());
-			pstmt.setInt(3, vo.getPrice());
-			pstmt.setInt(4, vo.getCategoryNo());
-			
-			result =  pstmt.executeUpdate() == 1;
+			if(rs.getInt(1) == 0) {
+				String authorSql = "insert into book values (?,?,?,?)";
+				pstmt = conn.prepareStatement(authorSql);
+				
+				pstmt.setInt(1, vo.getNo());
+				pstmt.setString(2, vo.getTitle());
+				pstmt.setInt(3, vo.getPrice());
+				pstmt.setInt(4, vo.getCategoryNo());
+				
+				result =  pstmt.executeUpdate() == 1;
+			}
 		} catch(SQLException e) {
 			System.out.println("error:" + e);
 		} finally{
 			try {
-				//5. 자원 정리
 				if(pstmt != null) {
 					pstmt.close();
+				}
+				if(rs != null) {
+					rs.close();
 				}
 				if (conn != null && !conn.isClosed())
 				{
@@ -183,7 +195,6 @@ public class BookDao {
 			Class.forName("org.mariadb.jdbc.Driver");
 			conn = DriverManager.getConnection(BookMall.URL, BookMall.ID, BookMall.PW);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return conn;
