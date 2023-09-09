@@ -140,9 +140,10 @@ public class BookMall {
 	}
 	
 	public static void insertCart(List<CartVo> cartList) {
+		CartDao cartDao = new CartDao();
 		boolean result = false;
 		for(CartVo cart : cartList) {
-			result = new CartDao().insert(cart);
+			result = cartDao.insert(cart);
 			System.out.println(result ? "카드 담기 성공":"카트 담기 실패");
 		}
 	}
@@ -200,9 +201,10 @@ public class BookMall {
 	}
 	
 	public static void insertOrderBook(List<OrderBookVo> orderBookList) {
+		OrderDao orderDao = new OrderDao();
 		boolean result = false;
 		for(OrderBookVo orderBook : orderBookList) {
-			result = new OrderDao().insertOrderBook(orderBook);
+			result = orderDao.insertOrderBook(orderBook);
 			System.out.println(result ? "책 주문 성공" : "책 주문 실패");
 		}
 	}
